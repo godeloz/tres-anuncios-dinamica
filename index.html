@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tres anuncios por un proceso — Parche de Liderazgo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#F7F0DF;
+    --cream-2:#FBF7EC;
+    --ink:#1B1A15;
+    --teal:#127D75;
+    --teal-2:#1AA79C;
+    --teal-deep:#0B5852;
+    --red:#D6392C;
+    --red-dark:#A32A20;
+    --coral:#E8935C;
+    --butter:#F0C15A;
+    --line:rgba(27,26,21,0.12);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--cream);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    padding:34px 16px 60px;
+  }
+  .app{width:100%; max-width:760px;}
+
+  /* header */
+  .app-header{text-align:center; margin-bottom:22px;}
+  .eyebrow{
+    display:inline-block;
+    font-family:'Inter',sans-serif;
+    font-weight:800;
+    font-size:11.5px;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--cream-2);
+    background:var(--teal);
+    padding:6px 16px;
+    border-radius:999px;
+    margin-bottom:14px;
+  }
+  .app-header h1{
+    font-family:'Bebas Neue',sans-serif;
+    font-size:46px;
+    letter-spacing:0.01em;
+    line-height:1.02;
+    margin:0;
+    color:var(--ink);
+  }
+  .app-header h1 em{
+    font-style:normal;
+    color:var(--red);
+  }
+  .stripe{
+    height:9px;
+    width:180px;
+    margin:16px auto 0;
+    border-radius:5px;
+    background:repeating-linear-gradient(90deg, var(--red) 0 16px, var(--cream-2) 16px 32px);
+    box-shadow:0 0 0 1.5px var(--ink) inset;
+  }
+  .progress{
+    margin-top:14px;
+    font-size:12.5px;
+    font-weight:600;
+    color:var(--teal-deep);
+    letter-spacing:0.02em;
+  }
+
+  /* select screen */
+  .story-card{
+    background:var(--cream-2);
+    border:1.5px solid var(--line);
+    border-top:6px solid var(--teal);
+    border-radius:14px;
+    padding:28px 28px 26px;
+    box-shadow:0 10px 26px rgba(27,26,21,0.06);
+  }
+  .badge{
+    display:inline-block;
+    font-family:'Inter',sans-serif;
+    font-weight:700;
+    font-size:11px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--teal-deep);
+    background:rgba(18,125,117,0.12);
+    padding:4px 11px;
+    border-radius:999px;
+    margin-bottom:14px;
+  }
+  .story-card h2{
+    font-family:'Bebas Neue',sans-serif;
+    font-size:29px;
+    letter-spacing:0.01em;
+    margin:0 0 12px;
+    color:var(--red-dark);
+    line-height:1.08;
+  }
+  .fantasy-text{
+    font-family:'Playfair Display',serif;
+    font-style:italic;
+    font-size:16.5px;
+    line-height:1.62;
+    color:#3a382f;
+    margin:0;
+  }
+
+  /* controls */
+  .controls{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-top:18px;
+    align-items:center;
+    position:relative;
+  }
+  .btn{
+    font-family:'Inter',sans-serif;
+    font-weight:700;
+    font-size:13.5px;
+    padding:11px 18px;
+    border-radius:999px;
+    border:1.5px solid var(--ink);
+    background:var(--cream-2);
+    color:var(--ink);
+    cursor:pointer;
+    transition:transform .12s ease, background .15s ease;
+  }
+  .btn:hover{background:#fff; transform:translateY(-1px);}
+  .btn:active{transform:translateY(0);}
+  .btn.icon{padding:11px 15px; font-size:14px; border-radius:12px;}
+  .btn.cta{background:var(--red); color:#fff; border-color:var(--red-dark);}
+  .btn.cta:hover{background:var(--red-dark);}
+  .btn.gold{background:var(--butter); color:var(--ink); border-color:#c99a2e;}
+  .btn.gold:hover{background:#f5cd76;}
+  .btn.ghost{background:transparent; border-color:var(--line);}
+  .btn:disabled{opacity:0.4; cursor:not-allowed; transform:none !important;}
+  .spacer{flex:1;}
+
+  .tooltip-pop{
+    position:absolute;
+    top:calc(100% + 10px);
+    left:0;
+    z-index:20;
+    max-width:460px;
+    background:var(--ink);
+    color:var(--cream-2);
+    border-radius:10px;
+    padding:16px 18px;
+    font-size:13.5px;
+    line-height:1.55;
+    box-shadow:0 14px 34px rgba(0,0,0,0.25);
+    display:none;
+  }
+  .tooltip-pop.show{display:block;}
+  .tooltip-pop b{color:var(--butter);}
+
+  /* billboard screen */
+  .case-tag{
+    font-size:12.5px;
+    font-weight:600;
+    color:var(--teal-deep);
+    margin:0 2px 14px;
+    text-align:center;
+  }
+  .case-tag b{color:var(--red-dark);}
+
+  .billboard-stack{
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+  }
+  .billboard{
+    position:relative;
+    background:var(--red);
+    border:7px solid var(--ink);
+    border-radius:4px;
+    box-shadow:0 12px 24px rgba(27,26,21,0.18);
+    padding:18px 22px;
+  }
+  .billboard .num{
+    display:inline-block;
+    font-family:'Inter',sans-serif;
+    font-weight:800;
+    font-size:11px;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--ink);
+    background:var(--butter);
+    padding:3px 10px;
+    border-radius:4px;
+    margin-bottom:10px;
+  }
+  .billboard textarea{
+    width:100%;
+    min-height:70px;
+    resize:none;
+    background:transparent;
+    border:none;
+    outline:none;
+    color:var(--ink);
+    font-family:'Bebas Neue',sans-serif;
+    font-size:30px;
+    letter-spacing:0.01em;
+    line-height:1.18;
+    text-transform:uppercase;
+  }
+  .billboard textarea::placeholder{
+    color:rgba(27,26,21,0.55);
+    font-family:'Inter',sans-serif;
+    font-size:13.5px;
+    text-transform:none;
+    letter-spacing:0;
+  }
+  .billboard .installed-tag{
+    display:none;
+    position:absolute;
+    top:14px;
+    right:14px;
+    font-family:'Inter',sans-serif;
+    font-size:10px;
+    font-weight:800;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--ink);
+    background:var(--cream-2);
+    padding:3px 9px;
+    border-radius:999px;
+  }
+  .billboard.published .installed-tag{display:inline-block;}
+
+  @keyframes plant{
+    0%{opacity:0; transform:translateY(16px);}
+    100%{opacity:1; transform:translateY(0);}
+  }
+  .billboard.just-published{animation:plant 0.4s ease both;}
+
+  /* modal */
+  .modal-overlay{
+    position:fixed; inset:0;
+    background:rgba(27,26,21,0.55);
+    backdrop-filter:blur(2px);
+    display:none;
+    align-items:center; justify-content:center;
+    z-index:100; padding:20px;
+  }
+  .modal-overlay.show{display:flex;}
+  .modal{
+    background:var(--cream-2);
+    border:1.5px solid var(--line);
+    border-top:6px solid var(--red);
+    border-radius:16px;
+    max-width:640px; width:100%;
+    max-height:86vh; overflow-y:auto;
+    padding:26px 26px 22px;
+  }
+  .modal.wide{max-width:720px;}
+  .modal-head{
+    display:flex; justify-content:space-between; align-items:flex-start;
+    margin-bottom:14px; gap:12px;
+  }
+  .modal-head h3{
+    font-family:'Bebas Neue',sans-serif;
+    font-size:27px;
+    color:var(--red-dark);
+    margin:0;
+  }
+  .modal-close{
+    background:transparent; border:1.5px solid var(--ink);
+    color:var(--ink); width:32px; height:32px;
+    border-radius:8px; cursor:pointer; font-size:16px; flex-shrink:0;
+  }
+  .modal-close:hover{background:rgba(27,26,21,0.06);}
+
+  .tip{margin-bottom:16px; padding-bottom:16px; border-bottom:1px solid var(--line);}
+  .tip:last-child{border-bottom:none; margin-bottom:0; padding-bottom:0;}
+  .tip h4{font-family:'Inter',sans-serif; font-size:14.5px; color:var(--teal-deep); margin:0 0 5px;}
+  .tip p{font-size:13.5px; line-height:1.55; color:#3a382f; margin:0 0 8px;}
+  .ex{font-size:13px; line-height:1.6; margin:2px 0;}
+  .ex.bad{color:var(--red-dark);}
+  .ex.bad::before{content:"✗  ";}
+  .ex.good{color:var(--teal-deep);}
+  .ex.good::before{content:"✓  ";}
+
+  /* resolution content */
+  .res-section{margin-bottom:20px;}
+  .res-section h4{
+    font-family:'Bebas Neue',sans-serif;
+    font-size:16px; letter-spacing:0.04em;
+    color:var(--red-dark); margin:0 0 10px;
+    text-transform:uppercase;
+  }
+  .mini-billboards{display:flex; flex-direction:column; gap:8px;}
+  .mini-billboard{
+    background:var(--red); border:3px solid var(--ink); border-radius:4px;
+    padding:10px 14px; color:var(--ink);
+    font-family:'Bebas Neue',sans-serif; font-size:18px;
+    text-transform:uppercase; letter-spacing:0.01em; line-height:1.2;
+  }
+  .res-case-text{
+    font-family:'Playfair Display',serif;
+    font-style:italic;
+    font-size:14.5px;
+    line-height:1.6;
+    color:#3a382f;
+    margin:0;
+  }
+  .res-list{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:6px;}
+  .res-list li{
+    background:rgba(18,125,117,0.08); border-left:3px solid var(--teal);
+    padding:9px 13px; font-size:13.5px; line-height:1.5; border-radius:0 6px 6px 0;
+  }
+  .res-real-text{
+    font-family:'Playfair Display',serif; font-style:italic;
+    font-size:14.5px; line-height:1.6; color:#3a382f; margin:0;
+  }
+  .tips-list{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px;}
+  .tips-list li{
+    background:rgba(240,193,90,0.18); border-left:3px solid var(--butter);
+    padding:10px 14px; font-size:14px; line-height:1.55; border-radius:0 6px 6px 0;
+    display:flex; gap:9px;
+  }
+  .tips-list li .n{
+    font-family:'Bebas Neue',sans-serif; color:var(--red-dark); font-size:17px; flex-shrink:0;
+  }
+
+  .filmstrip-mini{
+    height:8px; margin-top:30px;
+    background-color:var(--ink);
+    border-radius:3px;
+    background-image:repeating-linear-gradient(90deg, var(--cream) 0 7px, transparent 7px 13px);
+    opacity:0.85;
+  }
+
+  @media (max-width:640px){
+    .app-header h1{font-size:34px;}
+    .story-card{padding:20px;}
+    .billboard textarea{font-size:23px;}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="app-header">
+    <span class="eyebrow">Parche de Liderazgo</span>
+    <h1>Tres anuncios <em>por un proceso</em></h1>
+    <div class="stripe"></div>
+    <div class="progress" id="progressLabel">Situación 1 de 10</div>
+  </div>
+
+  <!-- SELECT SCREEN -->
+  <div id="selectScreen">
+    <div class="story-card">
+      <span class="badge">Situación fantástica</span>
+      <h2 id="sitTitle"></h2>
+      <p class="fantasy-text" id="sitFantasy"></p>
+    </div>
+
+    <div class="controls">
+      <button class="btn icon" id="prevBtn" title="Situación anterior">◀</button>
+      <button class="btn icon" id="nextBtn" title="Siguiente situación">▶</button>
+      <div style="position:relative;">
+        <button class="btn icon" id="tooltipBtn">❓ ¿Qué significa esto en la vida real?</button>
+        <div class="tooltip-pop" id="tooltipPop"></div>
+      </div>
+      <div class="spacer"></div>
+      <button class="btn cta" id="resolveBtn">Resolver caso →</button>
+    </div>
+  </div>
+
+  <!-- BILLBOARD SCREEN -->
+  <div id="billboardScreen" style="display:none;">
+    <p class="case-tag">Estás resolviendo: <b id="caseTagTitle"></b></p>
+    <div class="billboard-stack">
+      <div class="billboard" data-idx="0">
+        <span class="num">Valla 1 — el hecho</span>
+        <span class="installed-tag">Instalada</span>
+        <textarea placeholder="Escribe el hecho, sin acusar a nadie todavía..." maxlength="70"></textarea>
+      </div>
+      <div class="billboard" data-idx="1">
+        <span class="num">Valla 2 — el responsable</span>
+        <span class="installed-tag">Instalada</span>
+        <textarea placeholder="Nombra el rol o cargo con autoridad..." maxlength="70"></textarea>
+      </div>
+      <div class="billboard" data-idx="2">
+        <span class="num">Valla 3 — la consecuencia</span>
+        <span class="installed-tag">Instalada</span>
+        <textarea placeholder="Sube la apuesta. Que duela un poco más..." maxlength="70"></textarea>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button class="btn ghost" id="backBtn">← Elegir otra situación</button>
+      <div class="spacer"></div>
+      <button class="btn" id="instructionsBtn">📋 Instrucciones para preguntas incómodas</button>
+      <button class="btn cta" id="publishBtn">Publicar mi anuncio</button>
+      <button class="btn gold" id="resolutionBtn" disabled>Ver cómo se resolvió →</button>
+    </div>
+  </div>
+
+  <div class="filmstrip-mini"></div>
+</div>
+
+<!-- INSTRUCTIONS MODAL -->
+<div class="modal-overlay" id="instructionsModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>Consejo del gremio de anunciantes</h3>
+      <button class="modal-close" data-close="instructionsModal">✕</button>
+    </div>
+    <div class="tip">
+      <h4>1. Nombra el trono, no al aire</h4>
+      <p>Una pregunta sin dueño se pierde en el viento, como un heraldo que grita en el bosque. Señala el cargo o el área con autoridad para actuar.</p>
+      <p class="ex bad">"¿Por qué nadie decide?" (el aire nunca responde)</p>
+      <p class="ex good">"¿Quién en el comité tiene hoy la autoridad para aprobar esto?"</p>
+    </div>
+    <div class="tip">
+      <h4>2. Sube la escalera, no gires en círculos</h4>
+      <p>Tres vallas diciendo lo mismo tres veces es solo un eco caro. Que cada una suba un peldaño: hecho → responsable → consecuencia.</p>
+      <p class="ex good">Hecho: "¿Cuántas veces se pospuso esta decisión?"</p>
+      <p class="ex good">Responsable: "¿Quién firma la aprobación final?"</p>
+      <p class="ex good">Consecuencia: "¿Qué se pierde si esto sigue sin resolverse un trimestre más?"</p>
+    </div>
+    <div class="tip">
+      <h4>3. Los números no se pueden sobornar</h4>
+      <p>Una cifra exacta es más incómoda que mil adjetivos indignados.</p>
+      <p class="ex bad">"¿Por qué tarda tanto la aprobación?"</p>
+      <p class="ex good">"¿Por qué la aprobación lleva 47 días cuando el acuerdo dice 5?"</p>
+    </div>
+    <div class="tip">
+      <h4>4. Mira al camino, no al retrovisor</h4>
+      <p>Nadie destraba nada investigando de quién fue la culpa en el reinado anterior.</p>
+      <p class="ex bad">"¿Cómo llegamos a este punto?"</p>
+      <p class="ex good">"¿Qué tendría que pasar esta semana para desbloquear esto?"</p>
+    </div>
+    <div class="tip">
+      <h4>5. La prueba del pasillo</h4>
+      <p>Si no te animarías a leérsela al responsable cruzándotelo en el pasillo, todavía es una queja disfrazada de valla.</p>
+      <p class="ex bad">"Este equipo nunca cumple nada."</p>
+      <p class="ex good">"Directora de Operaciones, ¿qué compromiso tomamos hoy frente al retraso del tercer mes consecutivo?"</p>
+    </div>
+  </div>
+</div>
+
+<!-- RESOLUTION MODAL -->
+<div class="modal-overlay" id="resolutionModal">
+  <div class="modal wide">
+    <div class="modal-head">
+      <h3>Cómo se resolvió el caso</h3>
+      <button class="modal-close" data-close="resolutionModal">✕</button>
+    </div>
+    <div id="resolutionBody"></div>
+  </div>
+</div>
+
+<script>
+const SITUATIONS = [
+  {
+    title: "El reino donde nadie puede firmar la lluvia",
+    fantasy: "Cada vez que se necesita que llueva, un mago debe firmar un pergamino de autorización. El mago solo trabaja los martes, y el pergamino debe pasar antes por el Consejo de Nubes, que se reúne cada luna llena. Mientras tanto, los cultivos se secan y todos coinciden en que \"así se ha hecho siempre\".",
+    real: "El proceso de aprobación cuyo dueño formal ya no es indispensable, pero nadie se atreve a removerlo del flujo porque «siempre ha estado ahí». El cuello de botella no es técnico, es ritual: nadie recuerda por qué existe, solo que existe.",
+    fantasyQuestions: ["¿Los cultivos esperan a la luna llena?","Consejo de Nubes, ¿cuánto más sin sesión?","¿Y si el mago ya no hace falta?"],
+    realQuestions: ["¿Cuántas veces se pospuso este lanzamiento por falta de firma?","¿Quién tiene hoy la autoridad real para aprobar esto sin pasar por el comité completo?","¿Cuánto seguimos perdiendo mientras esperamos la próxima reunión mensual?"],
+    tips: ["Audita trimestralmente qué aprobaciones siguen siendo necesarias y cuáles se volvieron ritual.","Cuando identifiques un paso sin dueño claro, ofrécete a asumir esa decisión con el respaldo de tu jefe directo.","Documenta el costo real de cada demora para argumentar el cambio con datos, no con quejas."]
+  },
+  {
+    title: "El dragón que custodia una llave que ya no abre nada",
+    fantasy: "Un dragón lleva trescientos años custodiando la única llave capaz de abrir la puerta del tesoro real. Un aprendiz descubre que la puerta fue reemplazada hace un siglo por una más moderna, sin cerradura. El dragón sigue ahí, y la llave sigue custodiada.",
+    real: "El control, la validación o el paso de aprobación que quedó obsoleto tras un cambio de sistema o estructura, pero que nadie audita porque cuestionar al «guardián» se siente más arriesgado que mantener el proceso inútil.",
+    fantasyQuestions: ["¿La puerta cambió hace un siglo?","Guardián, ¿sabe qué custodia en realidad?","¿Cuánto cuesta preguntarle al dragón?"],
+    realQuestions: ["¿Cuándo fue la última vez que revisamos si este control sigue siendo necesario?","¿Quién es dueño de este paso de aprobación hoy, y sabe para qué sirve?","¿Cuánto tiempo de ciclo perdemos manteniendo un control que protege un sistema que ya no existe?"],
+    tips: ["Antes de aceptar un control como intocable, pregunta cuándo fue su última revisión.","Propón una prueba piloto sin ese control en un caso de bajo riesgo, para medir si es indispensable.","Si el control protege algo que ya no existe, documenta la evidencia y llévala a quien pueda eliminarlo."]
+  },
+  {
+    title: "El comité de gnomos que vota, pero nunca decide",
+    fantasy: "Un consejo de siete gnomos debe decidir si se construye un nuevo puente. Llevan cuarenta reuniones. En cada una, alguien pide \"una última consulta\" a un octavo gnomo que nunca está presente. Nadie se anima a votar sin él.",
+    real: "La decisión que se pospone indefinidamente en nombre del consenso, cuando en realidad lo que falta no es información, sino que alguien asuma el costo de decidir sin unanimidad.",
+    fantasyQuestions: ["Cuarenta reuniones, cero puente.","Octavo gnomo, ¿cuándo aparece?","¿Siete votos ya no alcanzan?"],
+    realQuestions: ["¿Cuántas reuniones lleva esta decisión sin resolverse?","¿Quién falta en la sala cuya opinión seguimos esperando, y por qué pesa más que las demás?","¿Qué perdemos como negocio por seguir buscando unanimidad en vez de una decisión?"],
+    tips: ["Fija de antemano una fecha límite de decisión, incluso sin unanimidad.","Ofrécete como la persona que asume decidir cuando el consenso no llegue a tiempo.","Resume las opciones en una sola página antes de la reunión, para que decidir sea más fácil que seguir discutiendo."]
+  },
+  {
+    title: "La posada donde todos los caminos llevan al mismo mesero",
+    fantasy: "En una posada encantada, cualquier pregunta debe pasar por un único mesero, que además solo atiende una mesa a la vez. La posada tiene doce empleados más, pero ninguno está autorizado a responder nada sin consultarlo a él primero.",
+    real: "El cuello de botella humano: la persona que se volvió punto único de decisión no porque el proceso lo exija, sino porque en algún momento nadie definió qué sí podían resolver los demás por su cuenta.",
+    fantasyQuestions: ["Doce empleados, una sola respuesta posible.","Mesero, ¿qué pasa si usted falta?","¿Quién más podría decir \"sí\"?"],
+    realQuestions: ["¿Cuántas solicitudes están hoy esperando solo a una persona?","¿Qué pasaría si esa persona estuviera fuera dos semanas?","¿Qué decisiones podría tomar el resto del equipo sin pasar por un único punto de aprobación?"],
+    tips: ["Identifica qué decisiones de bajo riesgo puede tomar el equipo sin escalar.","Crea un protocolo simple de \"quién responde qué\" para que una ausencia no paralice todo.","Rota la responsabilidad de aprobar ciertas tareas para que más de una persona tenga el contexto."]
+  },
+  {
+    title: "El faro que se enciende solo si tres reinos están de acuerdo en la hora",
+    fantasy: "Un faro que evita naufragios solo se activa si los astrónomos de tres reinos vecinos confirman, por separado, la misma hora exacta de encendido. Los tres reinos usan calendarios distintos. Los barcos siguen encallando.",
+    real: "El proceso interdepartamental que depende de la coordinación perfecta entre áreas que ni siquiera comparten los mismos criterios o definiciones, y donde la solución técnica existe, pero nadie ha armonizado las reglas de base.",
+    fantasyQuestions: ["Tres calendarios, un solo faro apagado.","Astrónomos, ¿de quién es el reloj correcto?","¿Cuántos barcos más hasta acordar la hora?"],
+    realQuestions: ["¿Cuántas veces el proyecto se retrasó por criterios distintos entre áreas?","¿Quién es responsable de unificar la definición entre los equipos involucrados?","¿Cuántas oportunidades seguimos perdiendo mientras cada área usa su propio criterio?"],
+    tips: ["Organiza una sesión breve para unificar definiciones y criterios entre las áreas involucradas.","Nombra a un responsable único de coordinar el cruce de información entre equipos.","Documenta el acuerdo alcanzado para que no se repita la confusión en el próximo ciclo."]
+  },
+  {
+    title: "El torneo de justas que nunca empieza porque falta un heraldo",
+    fantasy: "El reino organiza un torneo hace tres años. Cada vez que se fija fecha, el heraldo oficial —el único autorizado para anunciarlo— está de viaje. Nadie más puede tocar la trompeta de apertura, aunque hay doce trompetistas en la corte.",
+    real: "El lanzamiento o entrega que depende de una sola firma o presencia «protocolar» —un visto bueno simbólico—, aunque el trabajo real ya está listo hace meses.",
+    fantasyQuestions: ["¿Cuántos torneos se pospusieron ya?","Heraldo, ¿cuándo vuelve de viaje?","¿Los doce trompetistas siguen mudos?"],
+    realQuestions: ["¿Cuántos lanzamientos ya listos siguen esperando solo una firma protocolar?","¿Quién más podría dar ese visto bueno cuando la persona designada no está disponible?","¿Cuánto tiempo de mercado perdemos esperando una firma que no cambia el contenido del trabajo?"],
+    tips: ["Cuestiona si una firma es control real o solo ritual antes de esperarla pasivamente.","Propón un plan B de aprobación cuando la persona designada no esté disponible.","Comunica con anticipación las fechas críticas para evitar que una ausencia bloquee todo el proceso."]
+  },
+  {
+    title: "La biblioteca encantada que cataloga pero nunca presta libros",
+    fantasy: "Un ejército de bibliotecarios élficos cataloga cada libro con precisión perfecta, pero ningún libro puede salir de la biblioteca hasta ser catalogado dos veces por bibliotecarios distintos, que además no se hablan entre sí.",
+    real: "La doble validación redundante entre dos áreas que no coordinan criterios, y que duplican control en lugar de repartir responsabilidad.",
+    fantasyQuestions: ["¿Cuántos libros esperan su segunda revisión?","Bibliotecarios, ¿por qué no se hablan?","¿Cuántas lunas más sin prestar un libro?"],
+    realQuestions: ["¿Cuántas entregas están hoy esperando una segunda revisión que duplica la primera?","¿Por qué estas dos áreas no comparten un mismo criterio de validación?","¿Cuánto tiempo de entrega perdemos por revisar dos veces lo mismo sin coordinación?"],
+    tips: ["Reúne a las dos áreas que validan por separado y pregúntales qué necesitan realmente del otro.","Propón fusionar ambas revisiones en un solo paso compartido.","Mide cuánto tiempo se ahorraría eliminando la duplicidad y preséntalo como propuesta de mejora."]
+  },
+  {
+    title: "El molino que muele viento, pero solo si viene del norte",
+    fantasy: "El molino del pueblo puede procesar cualquier tipo de grano, pero solo funciona con viento del norte, una regla que un molinero fijó hace generaciones por una superstición ya olvidada. El pueblo importa harina mientras el viento sopla, generoso, desde el este.",
+    real: "La regla operativa heredada, sin dueño ni justificación vigente, que sigue limitando la capacidad real solo porque «así se configuró» el proceso.",
+    fantasyQuestions: ["¿Desde cuándo solo muele con viento norte?","Molinero, ¿quién fijó esa regla?","¿Cuánta harina más importamos mientras sopla el este?"],
+    realQuestions: ["¿Desde cuándo existe esta restricción y quién la definió?","¿Quién es hoy el dueño real de esta regla operativa?","¿Cuánta capacidad estamos dejando de usar por mantener una condición que ya no aplica?"],
+    tips: ["Investiga el origen de la regla antes de asumir que es intocable.","Pide evidencia de por qué la restricción sigue vigente hoy.","Si nadie puede justificarla, propón formalmente actualizarla o eliminarla."]
+  },
+  {
+    title: "El tribunal de las brujas que solo sesiona si acuerdan el mismo caldero",
+    fantasy: "Tres brujas deben resolver disputas del bosque, pero ninguna sesión empieza hasta que las tres acuerdan qué caldero usar, no por ritual mágico real, sino por orgullo. Las disputas se acumulan.",
+    real: "La reunión de decisión que se estanca en desacuerdos de forma —herramienta, formato, plantilla— mientras el fondo del problema espera.",
+    fantasyQuestions: ["Tres brujas, cero sesiones este mes.","¿De quién es el caldero que decide?","¿Cuántas disputas se pudren en el bosque?"],
+    realQuestions: ["¿Cuántas decisiones de fondo siguen esperando que acordemos la herramienta o el formato?","¿Quién puede decidir el formato para que el equipo avance con el contenido?","¿Cuántos problemas reales se acumulan mientras discutimos la plantilla?"],
+    tips: ["Ofrécete a decidir el formato o herramienta para que el grupo avance al contenido real.","Separa explícitamente en la agenda «decisiones de forma» de «decisiones de fondo».","Establece un tiempo máximo para discutir la forma antes de pasar al fondo."]
+  },
+  {
+    title: "El correo de palomas que solo entrega si el mensaje cabe en un ala",
+    fantasy: "El reino se comunica por palomas mensajeras, pero el protocolo exige que cada mensaje quepa en un pergamino minúsculo atado al ala, diseñado hace un siglo para mensajes breves. Los asuntos complejos de hoy llegan cortados, incompletos, a medias.",
+    real: "El canal o formato de reporte estandarizado que ya no corresponde a la complejidad real de lo que se necesita comunicar, y que nadie ha actualizado.",
+    fantasyQuestions: ["¿Cuántos mensajes llegan cortados?","¿Quién diseñó un pergamino de hace un siglo?","¿Cuántas decisiones se toman con la mitad del mensaje?"],
+    realQuestions: ["¿Cuánta información se pierde por el formato estándar que usamos para reportar?","¿Quién definió este formato y cuándo fue la última vez que se actualizó?","¿Cuántas decisiones se toman hoy con información incompleta por culpa del formato?"],
+    tips: ["Revisa si el formato de reporte actual sigue sirviendo para la complejidad de hoy.","Propón una versión alternativa para los casos que no caben en el formato estándar.","Solicita retroalimentación de quienes usan el reporte sobre qué información realmente necesitan."]
+  }
+];
+
+let current = 0;
+
+const sitTitle = document.getElementById('sitTitle');
+const sitFantasy = document.getElementById('sitFantasy');
+const progressLabel = document.getElementById('progressLabel');
+const tooltipPop = document.getElementById('tooltipPop');
+const caseTagTitle = document.getElementById('caseTagTitle');
+const selectScreen = document.getElementById('selectScreen');
+const billboardScreen = document.getElementById('billboardScreen');
+const resolutionBtn = document.getElementById('resolutionBtn');
+const publishBtn = document.getElementById('publishBtn');
+
+function renderSelect(){
+  const s = SITUATIONS[current];
+  sitTitle.textContent = s.title;
+  sitFantasy.textContent = s.fantasy;
+  progressLabel.textContent = `Situación ${current+1} de ${SITUATIONS.length}`;
+  tooltipPop.classList.remove('show');
+  tooltipPop.innerHTML = `<b>Traducción a la vida real:</b><br>${s.real}`;
+}
+
+document.getElementById('prevBtn').addEventListener('click', ()=>{
+  current = (current - 1 + SITUATIONS.length) % SITUATIONS.length;
+  renderSelect();
+});
+document.getElementById('nextBtn').addEventListener('click', ()=>{
+  current = (current + 1) % SITUATIONS.length;
+  renderSelect();
+});
+document.getElementById('tooltipBtn').addEventListener('click', ()=>{
+  tooltipPop.classList.toggle('show');
+});
+document.addEventListener('click', (e)=>{
+  if(!e.target.closest('#tooltipBtn') && !e.target.closest('#tooltipPop')){
+    tooltipPop.classList.remove('show');
+  }
+});
+
+document.getElementById('resolveBtn').addEventListener('click', ()=>{
+  const s = SITUATIONS[current];
+  caseTagTitle.textContent = s.title;
+  selectScreen.style.display = 'none';
+  billboardScreen.style.display = 'block';
+  resolutionBtn.disabled = true;
+  document.querySelectorAll('.billboard').forEach((b)=>{
+    b.classList.remove('published','just-published');
+    const ta = b.querySelector('textarea');
+    ta.value = '';
+    ta.readOnly = false;
+  });
+  publishBtn.textContent = 'Publicar mi anuncio';
+  publishBtn.disabled = false;
+});
+
+document.getElementById('backBtn').addEventListener('click', ()=>{
+  billboardScreen.style.display = 'none';
+  selectScreen.style.display = 'block';
+});
+
+publishBtn.addEventListener('click', ()=>{
+  document.querySelectorAll('.billboard').forEach((b)=>{
+    const ta = b.querySelector('textarea');
+    if(!ta.value.trim()) ta.value = '(sin valla instalada todavía)';
+    ta.readOnly = true;
+    b.classList.add('published','just-published');
+  });
+  publishBtn.textContent = 'Anuncio publicado ✓';
+  publishBtn.disabled = true;
+  resolutionBtn.disabled = false;
+});
+
+function openModal(id){ document.getElementById(id).classList.add('show'); }
+function closeModal(id){ document.getElementById(id).classList.remove('show'); }
+
+document.getElementById('instructionsBtn').addEventListener('click', ()=> openModal('instructionsModal'));
+document.querySelectorAll('.modal-close').forEach(btn=>{
+  btn.addEventListener('click', ()=> closeModal(btn.dataset.close));
+});
+document.querySelectorAll('.modal-overlay').forEach(overlay=>{
+  overlay.addEventListener('click', (e)=>{
+    if(e.target === overlay) overlay.classList.remove('show');
+  });
+});
+
+resolutionBtn.addEventListener('click', ()=>{
+  const s = SITUATIONS[current];
+  const userTexts = Array.from(document.querySelectorAll('.billboard textarea')).map(ta => ta.value);
+  const body = document.getElementById('resolutionBody');
+  body.innerHTML = `
+    <div class="res-section">
+      <h4>El caso</h4>
+      <p class="res-case-text">${s.fantasy}</p>
+    </div>
+    <div class="res-section">
+      <h4>Tu anuncio</h4>
+      <div class="mini-billboards">
+        ${userTexts.map(t=>`<div class="mini-billboard">${t}</div>`).join('')}
+      </div>
+    </div>
+    <div class="res-section">
+      <h4>Las preguntas que hubieran destrabado el caso</h4>
+      <ul class="res-list">
+        ${s.fantasyQuestions.map(q=>`<li>${q}</li>`).join('')}
+      </ul>
+    </div>
+    <div class="res-section">
+      <h4>Traducción a la vida real</h4>
+      <p class="res-real-text">${s.real}</p>
+    </div>
+    <div class="res-section">
+      <h4>Preguntas reales equivalentes</h4>
+      <ul class="res-list">
+        ${s.realQuestions.map(q=>`<li>${q}</li>`).join('')}
+      </ul>
+    </div>
+    <div class="res-section">
+      <h4>Cómo construir esta iniciativa en tu equipo</h4>
+      <ul class="tips-list">
+        ${s.tips.map((t,i)=>`<li><span class="n">${i+1}</span><span>${t}</span></li>`).join('')}
+      </ul>
+    </div>
+  `;
+  openModal('resolutionModal');
+});
+
+renderSelect();
+</script>
+</body>
+</html>
